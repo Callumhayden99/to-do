@@ -16,7 +16,6 @@
 
 html,
 body {
-  @apply bg-gray-500 min-h-screen;
   scroll-behavior: smooth;
 }
 
@@ -26,4 +25,8 @@ body {
 }
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-in-out;
+}
+
+.blue-placeholder::placeholder {
+  color: rgb(14 116 144);
 }
