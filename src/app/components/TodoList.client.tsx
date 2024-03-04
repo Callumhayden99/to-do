@@ -5,6 +5,8 @@ export default function TodoList() {
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
   const [editIndex, setEditIndex] = useState(-1);
+  const [showCongratsPopup, setShowCongratsPopup] = useState(false);
+
 
   const handleInputChange = (e) => {
     setTaskInput(e.target.value);
@@ -40,24 +42,33 @@ export default function TodoList() {
   };
 
   const toggleCompletion = (taskIndex) => {
+    const task = tasks[taskIndex];
+    if (!task.completed) {
+      setShowCongratsPopup(true);
+      setTimeout(() => {
+        setShowCongratsPopup(false);
+      }, 3000); // Hide the popup after 3 seconds
+    }
+  
     const updatedTasks = tasks.map((task, index) => {
       if (index === taskIndex) {
         return {
           ...task,
           completed: !task.completed,
-          completedAt: !task.completed
-            ? new Date().toISOString()
-            : task.completedAt,
+          completedAt: !task.completed ? new Date().toISOString() : task.completedAt,
         };
       }
       return task;
     });
     setTasks(updatedTasks);
   };
+  
 
   const deleteTask = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
+
+  
 
   // Divide tasks into completed and not completed
   const completedTasks = tasks.filter((task) => task.completed);
@@ -75,8 +86,8 @@ export default function TodoList() {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">To-Do List</h1>
+    <div className="container  mx-auto p-4">
+      <h1 className="text-2xl text-white font-bold mb-4 text-center">To-Do List</h1>
       <form
         onSubmit={addOrUpdateTask}
         className="mb-4 flex flex-col items-center"
@@ -97,7 +108,7 @@ export default function TodoList() {
       </form>
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-1">
-          <h2 className="text-xl font-semibold mb-3 text-center">
+          <h2 className="text-xl bg-red-500 rounded-2xl font-semibold mb-3 text-center">
             Incomplete Tasks
           </h2>
           <ul className="list-none">
@@ -134,7 +145,7 @@ export default function TodoList() {
           </ul>
         </div>
         <div className="flex-1">
-          <h2 className="text-xl font-semibold mb-3 text-center">
+          <h2 className="text-xl bg-green-500 rounded-2xl font-semibold mb-3 text-center">
             Completed Tasks
           </h2>
           <ul className="list-none">
