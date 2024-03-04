@@ -39,16 +39,18 @@ export default function TodoList() {
     setTaskInput(tasks[index].text);
   };
 
-  const toggleCompletion = (index) => {
-    const updatedTasks = tasks.map((item, i) => {
-      if (i === index) {
+  const toggleCompletion = (taskIndex) => {
+    const updatedTasks = tasks.map((task, index) => {
+      if (index === taskIndex) {
         return {
-          ...item,
-          completed: !item.completed,
-          ...(item.completed ? {} : { completedAt: new Date().toISOString() }),
+          ...task,
+          completed: !task.completed,
+          completedAt: !task.completed
+            ? new Date().toISOString()
+            : task.completedAt,
         };
       }
-      return item;
+      return task;
     });
     setTasks(updatedTasks);
   };
@@ -104,9 +106,12 @@ export default function TodoList() {
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => toggleCompletion(index)}
+                  onChange={() =>
+                    toggleCompletion(tasks.findIndex((t) => t === task))
+                  }
                   className="mr-2"
                 />
+
                 <span>{task.text}</span>
                 <span className="text-xs text-gray-600">
                   {" "}
@@ -138,9 +143,12 @@ export default function TodoList() {
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => toggleCompletion(index)}
+                  onChange={() =>
+                    toggleCompletion(tasks.findIndex((t) => t === task))
+                  }
                   className="mr-2"
                 />
+
                 <span className="line-through">{task.text}</span>
                 <span className="text-xs text-gray-600">
                   {" "}
