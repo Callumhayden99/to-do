@@ -1,10 +1,10 @@
 import React from "react";
-import Main from "./components/main";
+import Home from "./components/Home.client";
 
-export default function Home() {
+export default function Page() {
   return (
     <>
-    <Main />
+    <Home/>
     </>
   );
 }
