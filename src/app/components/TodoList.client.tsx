@@ -15,12 +15,14 @@ export default function TodoList() {
     if (taskInput.trim() === '') return;
 
     if (editIndex > -1) {
+      // Update task
       const updatedTasks = tasks.map((item, index) =>
         index === editIndex ? { ...item, text: taskInput } : item
       );
       setTasks(updatedTasks);
       setEditIndex(-1);
     } else {
+      // Add new task
       setTasks([...tasks, { text: taskInput, completed: false }]);
     }
 
@@ -43,6 +45,10 @@ export default function TodoList() {
     setTasks(tasks.filter((_, i) => i !== index));
   };
 
+  // Divide tasks into completed and not completed
+  const completedTasks = tasks.filter(task => task.completed);
+  const notCompletedTasks = tasks.filter(task => !task.completed);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">To-Do List</h1>
@@ -61,33 +67,58 @@ export default function TodoList() {
           {editIndex > -1 ? 'Update Task' : 'Add Task'}
         </button>
       </form>
-      <ul className="list-none">
-        {tasks.map((task, index) => (
-          <li key={index} className={`mb-2 p-2 rounded ${task.completed ? 'bg-green-200' : 'bg-gray-200'}`}>
-            <input
-              type="checkbox"
-              checked={task.completed}
-              onChange={() => toggleCompletion(index)}
-              className="mr-2"
-            />
-            <span className={task.completed ? 'line-through' : undefined}>
-              {task.text}
-            </span>
-            <button
-              onClick={() => editTask(index)}
-              className="text-blue-500 ml-4"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => deleteTask(index)}
-              className="text-red-500 ml-2"
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="flex gap-4">
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold mb-3">Incomplete Tasks</h2>
+          <ul className="list-none">
+            {notCompletedTasks.map((task, index) => (
+              <li key={index} className="mb-2 p-2 rounded bg-red-200">
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleCompletion(index)}
+                  className="mr-2"
+                />
+                <span>{task.text}</span>
+                <button
+                  onClick={() => editTask(index)}
+                  className="text-blue-500 ml-4"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => deleteTask(index)}
+                  className="text-red-500 ml-2"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex-1">
+          <h2 className="text-xl font-semibold mb-3">Completed Tasks</h2>
+          <ul className="list-none">
+            {completedTasks.map((task, index) => (
+              <li key={index} className="mb-2 p-2 rounded bg-green-200">
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleCompletion(index)}
+                  className="mr-2"
+                />
+                <span className="line-through">{task.text}</span>
+                <button
+                  onClick={() => deleteTask(index)}
+                  className="text-red-500 ml-4"
+                >
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
