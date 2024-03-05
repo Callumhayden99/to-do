@@ -14,7 +14,8 @@ export default function CombinedAuthForm() {
         <title>Login or Register </title>
       </Head>
       <div className="h-screen">
-        <div className="h-screen bg-gradient-to-r from-stone-400 to-slate-600 flex flex-col justify-center items-center">
+        <div className="h-screen bg-gray-700 flex flex-col justify-center items-center">
+        <h1 className="text-white text-4xl font-extralight">Welcome to the register & login page</h1>
           {isRegistering ? <RegisterForm /> : <LoginForm />}
 
           <button

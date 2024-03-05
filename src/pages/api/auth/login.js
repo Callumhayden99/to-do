@@ -1,7 +1,7 @@
 // pages/api/auth/login.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import prisma from "../../../..prismaClient";
+import prisma from "../../../../prismaClient";
 
 export default async function handler(req, res) {
   const { email, password } = req.body;
