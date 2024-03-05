@@ -1,18 +1,39 @@
 "use client";
 import { useState } from "react";
+import Registration from "./Registration";
 
 type SignUpProps = {
-    onLogin: (email: string, password: string) => void;
-  };  
+  onLogin: (email: string, password: string) => void;
+};
 
-  export default function SignUp({ onLogin }) {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      onLogin(email, password);
-    };
+export default function SignUp({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    onLogin(email, password);
+  };
+
+  const handleRegister = (email, password) => {
+    console.log("Registering", email, password);
+    setIsRegistering(false); 
+  };
+
+  if (isRegistering) {
+    return (
+      <>
+        <Registration onRegister={handleRegister} />
+        <button
+          onClick={() => setIsRegistering(false)}
+          className="mt-4 bg-gray-500 text-white font-bold py-2 px-4 rounded hover:bg-gray-700 focus:outline-none focus:shadow-outline transition duration-150 ease-in-out"
+        >
+          Back to Login
+        </button>
+      </>
+    );
+  }
 
   return (
     <>
@@ -61,6 +82,14 @@ type SignUpProps = {
                 >
                   Log In
                 </button>
+                <div className="mt-6 text-center">
+                  <button
+                    onClick={() => setIsRegistering(true)}
+                    className="text-blue-500 hover:text-blue-700 font-semibold"
+                  >
+                    Don't have an account? Register
+                  </button>
+                </div>
               </div>
             </form>
           </div>
@@ -70,6 +99,5 @@ type SignUpProps = {
   );
 }
 function onLogin(email: string, password: string) {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }
-

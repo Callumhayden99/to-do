@@ -1,32 +1,36 @@
-'use client'
-import React, { useState } from 'react';
-import Head from 'next/head';
-import SignUp from './SignUp';
-import TodoList from './TodoList';
+"use client";
+// Home.js
 
-export default function Home() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+import React, { useState } from "react";
+import Head from "next/head";
+import SignUp from "./SignUp";
+import TodoList from "./TodoList";
 
-  const login = (email, password) => {
-    // Your login logic here
-    setIsAuthenticated(true);
+function Home() {
+  const [view, setView] = useState("login"); // Can be 'login', 'register', or 'app'
+
+  const handleLogin = (email, password) => {
+    // Implement login logic here
+    setView("app"); // For now, immediately switch to app view on login attempt
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
+  const handleLogout = () => {
+    setView("login"); // Show login view on logout
   };
 
   return (
     <div>
       <Head>
-        <title>To-Do List App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Todo List App</title>
       </Head>
-      {
-        !isAuthenticated ? 
-        <SignUp onLogin={login} /> : 
-        <TodoList onLogout={logout} />
-      }
+      {view === "login" && (
+        <>
+          <SignUp onLogin={handleLogin} />
+        </>
+      )}
+      {view === "app" && <TodoList onLogout={handleLogout} />}
     </div>
   );
 }
+
+export default Home;
