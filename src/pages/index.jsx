@@ -2,8 +2,11 @@
 import React, { useState, useMemo, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function TodoList({ onLogout }) {
+  const { data: session, status } = useSession();
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
   const [taskDate, setTaskDate] = useState(new Date());
@@ -93,6 +96,15 @@ export default function TodoList({ onLogout }) {
     });
   }, [tasks]);
 
+
+  const router = useRouter();
+  useEffect(() => {
+    // Redirect unauthenticated users
+    if (status !== 'loading' && !session) {
+      router.push('/auth');
+    }
+  }, [session, status, router]);
+
   return (
     <div className="min-h-screen bg-gray-200 p-4">
       <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-center">
@@ -122,7 +134,7 @@ export default function TodoList({ onLogout }) {
           {editIndex !== null ? "Update Task" : "Add Task"}
         </button>
         <button
-          onClick={onLogout} // Use the onLogout function when the button is clicked
+          onClick={() => signOut({ callbackUrl: "/auth" })}// Use the onLogout function when the button is clicked
           className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
         >
           Logout

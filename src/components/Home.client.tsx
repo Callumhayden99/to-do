@@ -3,8 +3,7 @@
 
 import React, { useState } from "react";
 import Head from "next/head";
-import SignUp from "./SignUp";
-import TodoList from "./TodoList";
+import TodoList from "../pages";
 
 function Home() {
   const [view, setView] = useState("login"); // Can be 'login', 'register', or 'app'
@@ -23,12 +22,7 @@ function Home() {
       <Head>
         <title>Todo List App</title>
       </Head>
-      {view === "login" && (
-        <>
-          <SignUp onLogin={handleLogin} />
-        </>
-      )}
-      {view === "app" && <TodoList onLogout={handleLogout} />}
+      <TodoList onLogout={undefined} />
     </div>
   );
 }

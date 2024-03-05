@@ -3,7 +3,6 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import Head from "next/head";
 import { signIn } from "next-auth/react";
-
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 export default function CombinedAuthForm() {
@@ -15,8 +14,6 @@ export default function CombinedAuthForm() {
         <title>Login or Register </title>
       </Head>
       <div className="h-screen">
-       
-
         <div className="h-screen bg-gradient-to-r from-stone-400 to-slate-600 flex flex-col justify-center items-center">
           {isRegistering ? <RegisterForm /> : <LoginForm />}
 
