@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-export default function TodoList() {
+export default function TodoList({ onLogout }) {
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
   const [taskDate, setTaskDate] = useState(new Date());
@@ -74,6 +74,25 @@ export default function TodoList() {
     }, {});
   }, [tasks]);
 
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
+  useEffect(() => {
+    Notification.requestPermission().then((result) => {
+      if (result === "granted") {
+        const today = new Date().toISOString().split("T")[0];
+        const todaysTasks = tasks.filter((task) => task.date === today);
+
+        if (todaysTasks.length > 0) {
+          new Notification("Task Reminder", {
+            body: `You have ${todaysTasks.length} tasks due today.`,
+          });
+        }
+      }
+    });
+  }, [tasks]);
+
   return (
     <div className="min-h-screen bg-gray-200 p-4">
       <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-center">
@@ -101,6 +120,12 @@ export default function TodoList() {
           className="bg-blue-500 text-white rounded p-2 w-full max-w-md"
         >
           {editIndex !== null ? "Update Task" : "Add Task"}
+        </button>
+        <button
+          onClick={onLogout} // Use the onLogout function when the button is clicked
+          className="mt-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Logout
         </button>
       </form>
       {Object.entries(tasksGroupedByDate)
