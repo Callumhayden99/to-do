@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "20.11.24",
     "@types/react": "18.2.61",
     "@types/react-datepicker": "^6.0.3",
