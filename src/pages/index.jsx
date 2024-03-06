@@ -5,6 +5,8 @@ import { getSession } from "next-auth/react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
+import axios from 'axios';
+
 
 export default function TodoList() {
   const { data: session, status } = useSession();
@@ -13,37 +15,70 @@ export default function TodoList() {
   const [taskDate, setTaskDate] = useState(new Date());
   const [editIndex, setEditIndex] = useState(null);
 
+  useEffect(() => {
+    if (status !== 'loading' && !session) {
+      router.push('/auth');
+    }
+  }, [session, status, router]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (session) {
+        try {
+          const res = await axios.get('/api/tasks', {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session.accessToken}`, // Adjust based on how you handle auth
+            },
+          });
+          setTasks(res.data || []);
+        } catch (error) {
+          console.error('Failed to fetch tasks', error);
+        }
+      }
+    };
+
+    fetchTasks();
+  }, [session]);
+
   const handleInputChange = (e) => setTaskInput(e.target.value);
 
   const handleDateChange = (date) => setTaskDate(date);
 
   const formatDate = (date) => date.toISOString().split("T")[0];
 
-  const addOrUpdateTask = (e) => {
+  const addOrUpdateTask = async (e) => {
     e.preventDefault();
-    const formattedDate = formatDate(taskDate);
-
-    const newTask = {
-      id: editIndex !== null ? tasks[editIndex].id : Date.now(),
-      text: taskInput,
-      date: formattedDate,
-      createdAt: new Date().toISOString(),
-      completed: editIndex !== null ? tasks[editIndex].completed : false,
-      completedAt: editIndex !== null ? tasks[editIndex].completedAt : "",
+    const taskData = {
+      title: taskInput,
+      date: taskDate,
+      userId: session.user.id, // Ensure you pass the correct user ID based on your session data
     };
 
-    if (editIndex !== null) {
-      const updatedTasks = tasks.map((task, index) =>
-        index === editIndex ? newTask : task
-      );
-      setTasks(updatedTasks);
-      setEditIndex(null);
-    } else {
-      setTasks([...tasks, newTask]);
+    try {
+      if (editIndex !== null) {
+        await axios.put(`/api/tasks/${tasks[editIndex].id}`, taskData, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.accessToken}`, // Adjust based on how you handle auth
+          },
+        });
+      } else {
+        await axios.post('/api/tasks/create', taskData, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.accessToken}`, // Adjust based on how you handle auth
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Failed to add/update task', error);
     }
 
-    setTaskInput("");
+    setTaskInput('');
     setTaskDate(new Date());
+    setEditIndex(null);
+    fetchTasks(); // Re-fetch tasks to reflect the changes
   };
 
   const toggleCompletion = (id) => {
@@ -209,7 +244,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/auth",
         permanent: false,
       },
     };
