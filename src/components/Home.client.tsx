@@ -22,7 +22,7 @@ function Home() {
       <Head>
         <title>Todo List App</title>
       </Head>
-      <TodoList onLogout={undefined} />
+      <TodoList />
     </div>
   );
 }
