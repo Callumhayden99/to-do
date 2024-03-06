@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import prisma from "../../../../prismaClient"; // Adjust the import path as needed
+import prisma from "../../../prismaClient"; // Adjust the import path as needed
 
 export default NextAuth({
   providers: [
@@ -12,17 +12,22 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-
-        if (user && (await bcrypt.compare(credentials.password, user.password))) {
-
-          return { id: user.id, name: user.name, email: user.email};
-        } else {
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
+      
+          if (user && await bcrypt.compare(credentials.password, user.password)) {
+            return { id: user.id, name: user.name, email: user.email };
+          }
+          // Optionally, log or handle the failure case more explicitly here
           return null;
+        } catch (error) {
+          console.error('Authorization error:', error);
+          // Depending on your error handling strategy, you might want to throw the error or return null
+          throw new Error('An error occurred during authorization.');
         }
-      },
+      }
     }),
   ],
   callbacks: {
