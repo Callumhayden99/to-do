@@ -1,7 +1,7 @@
 
 import prisma from '../../../../prismaClient';
 
-export default async function handle(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'POST') {
     // Extract task details from the request body
     const { title, userId } = req.body;

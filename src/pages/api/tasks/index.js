@@ -2,7 +2,7 @@
 import { getSession } from 'next-auth/react';
 import prisma from '../../../../prismaClient';
 
-export default async function handle(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       // Get user session to identify the user

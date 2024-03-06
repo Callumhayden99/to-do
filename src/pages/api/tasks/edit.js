@@ -1,7 +1,7 @@
 import { getSession } from 'next-auth/react';
 import prisma from '../../../../prismaClient';
 
-export default async function handle(req, res) {
+export default async function handler(req, res) {
   if (req.method === 'PUT') {
     try {
       const session = await getSession({ req });
