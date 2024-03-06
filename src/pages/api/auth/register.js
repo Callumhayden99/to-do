@@ -1,9 +1,9 @@
-// pages/api/auth/register.js
 import bcrypt from 'bcryptjs';
-import prisma from "../../../../prismaClient";
+import prisma from "../../../../prismaClient"; // Adjust the path as needed based on your project structure
+ // Adjust the import path as necessary
 
 export default async function handler(req, res) {
-  const { email, password, firstName, lastName } = req.body;
+  const { email, password, name } = req.body;
 
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -13,8 +13,7 @@ export default async function handler(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await prisma.user.create({
       data: {
-        firstName,
-        lastName,
+        name,
         email,
         password: hashedPassword,
       },

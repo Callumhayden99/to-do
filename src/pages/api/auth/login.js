@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     // Assuming you want to continue with the JWT approach for some custom handling.
     const token = jwt.sign(
       { id: user.id, email: user.email },
-      process.env.SECRET,
+      process.env.JWT_SECRET,
       { expiresIn: "8h" }
     );
 

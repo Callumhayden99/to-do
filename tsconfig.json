@@ -29,7 +29,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/app/actions.js"
-, "src/pages/index.jsx", "src/pages/api/[...nextauth].js"  ],
+, "src/pages/index.jsx", "src/pages/api/auth/[...nextauth].js"  ],
   "exclude": [
     "node_modules"
   ]

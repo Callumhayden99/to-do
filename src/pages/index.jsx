@@ -1,11 +1,12 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import DatePicker from "react-datepicker";
+import { getSession } from "next-auth/react";
 import "react-datepicker/dist/react-datepicker.css";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
-export default function TodoList({ onLogout }) {
+export default function TodoList() {
   const { data: session, status } = useSession();
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
@@ -200,4 +201,21 @@ export default function TodoList({ onLogout }) {
         ))}
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
 }

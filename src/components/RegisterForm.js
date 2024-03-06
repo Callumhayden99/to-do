@@ -3,8 +3,7 @@ import { signIn } from "next-auth/react";
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -22,6 +21,11 @@ export default function RegisterForm() {
   const isValidEmail = (email) => {
     // Simple regex for basic email validation
     return /\S+@\S+\.\S+/.test(email);
+  };
+
+  const isValidFullName = (name) => {
+    // Check if full name contains at least two words
+    return name.trim().split(" ").length >= 2;
   };
 
   const handleChange = (e) => {
@@ -43,6 +47,10 @@ export default function RegisterForm() {
       setErrorMessage("Please enter a valid email address.");
       return;
     }
+    if (!isValidFullName(formData.name)) {
+      setErrorMessage("Full name must contain at least two words.");
+      return;
+    }
 
     const response = await fetch("/api/auth/register", {
       method: "POST",
@@ -60,7 +68,7 @@ export default function RegisterForm() {
         redirect: false, // Prevent NextAuth from redirecting internally
         email: formData.email,
         password: formData.password,
-        callbackUrl: `${window.location.origin}/browse`,
+        callbackUrl: `${window.location.origin}/`,
       })
         .then((res) => {
           if (res.url) window.location.href = res.url; // Redirect to the callbackUrl or /protected
@@ -89,29 +97,18 @@ export default function RegisterForm() {
         <h1 className="text-black flex justify-center pb-5 text-3xl font-bold font-quicksand">
           Register
         </h1>
-        <div className="mb-1">
+        <div className="mb-4">
           <input
             type="text"
-            name="firstName"
-            id="firstName"
-            value={formData.firstName}
+            name="name"
+            id="name"
+            value={formData.name}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="First name"
+            placeholder="Full name"
           />
         </div>
-        <div className="mb-1">
-          <input
-            type="text"
-            name="lastName"
-            id="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Last name"
-          />
-        </div>
-        <div className="mb-1">
+        <div className="mb-4">
           <input
             type="email"
             name="email"
