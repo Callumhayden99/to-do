@@ -7,8 +7,8 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 
 
-
 export default function TodoList() {
+  console.log("in todo list")
   const { data: session, status } = useSession();
   const [tasks, setTasks] = useState([]);
   const [taskInput, setTaskInput] = useState("");
@@ -104,11 +104,10 @@ export default function TodoList() {
   useEffect(() => {
     // Redirect unauthenticated users
     if (status !== 'loading' && !session) {
-      router.push('/auth');
+   router.push('/auth');
     }
   }, [session, status, router]);
-
-  return (
+   return (
     <div className="min-h-screen bg-gray-200 p-4">
       <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-center">
         Task Scheduler
@@ -202,7 +201,7 @@ export default function TodoList() {
           </div>
         ))}
     </div>
-  );
+ );
 }
 
 export async function getServerSideProps(context) {
@@ -211,7 +210,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/auth",
         permanent: false,
       },
     };
