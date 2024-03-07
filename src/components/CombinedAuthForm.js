@@ -11,7 +11,7 @@ export default function CombinedAuthForm() {
 
   return (
     <>
-    <div className="min-h-screen bg-gradient-to-r from-stone-400 to-slate-600 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gray-300 to-slate-600 flex flex-col justify-center items-center">
       {isRegistering ? <RegisterForm /> : <LoginForm />}
 
       <button

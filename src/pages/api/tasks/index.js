@@ -10,7 +10,7 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
 
-      const userId = session.user.id; // Directly use userId from session
+      const userId = parseInt(session.user.id); 
 
       const tasks = await prisma.task.findMany({
         where: {

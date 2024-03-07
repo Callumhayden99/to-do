@@ -3,14 +3,13 @@ import { getSession } from 'next-auth/react';
 import prisma from '../../../../prismaClient';
 
 export default async function handler(req, res) {
+  const { taskId } = req.query;
   if (req.method === 'DELETE') {
     try {
       const session = await getSession({ req });
       if (!session || !session.user) {
         return res.status(401).json({ error: 'Unauthorized' });
       }
-
-      const { taskId } = req.query;
 
       const deletedTask = await prisma.task.delete({
         where: { id: parseInt(taskId) },
