@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     const token = jwt.sign(
       { id: user.id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: "60s" }
+      { expiresIn: "8h" }
     );
 
     // Instead of returning the token directly,
